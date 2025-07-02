@@ -1,0 +1,514 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Barakah Builder&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/react@18/umd/react.development.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="root"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script type="text/babel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Paste the React component code here</p>
+<p class="p1">import React, { useState, useEffect } from 'react';</p>
+<p class="p1">import { CheckCircle, Circle, Book, Users, Target, Award, Sun, Moon, Clock } from 'lucide-react';</p>
+<p class="p2"><br></p>
+<p class="p1">const BarakahBuilder = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [currentLevel, setCurrentLevel] = useState(1);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [completedHabits, setCompletedHabits] = useState({});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [showDuaModal, setShowDuaModal] = useState(false);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [selectedDua, setSelectedDua] = useState(null);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [showAIFeedback, setShowAIFeedback] = useState(false);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [aiFeedback, setAiFeedback] = useState(null);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [loadingFeedback, setLoadingFeedback] = useState(false);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [userName, setUserName] = useState('Brother/Sister');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Sample duas and content</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const duasContent = {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>'wake-up': {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title: 'Dua upon Waking Up',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transliteration: 'Alhamdu lillaahil-lathee ahyaana ba\'da maa amaatanaa wa ilayhin-nushoor',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>translation: 'All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection.'</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>'sleep': {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title: 'Dua before Sleeping',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>arabic: 'بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transliteration: 'Bismika rabbee wada\'tu janbee wa bika arfa\'uhu fa-in amsakta nafsee farhamhaa wa in arsaltahaa fahfazhaa bimaa tahfazu bihi \'ibaadakas-saaliheen',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>translation: 'In Your name my Lord, I lie down and in Your name I rise, so if You should take my soul then have mercy upon it, and if You should return my soul then protect it in the manner You do so with Your righteous servants.'</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Level definitions</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const levels = {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>1: {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title: "Foundation Level",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>description: "Essential Islamic practices and worldly responsibilities",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>habits: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'wake-dua', name: 'Morning Dua (Upon Waking)', category: 'spiritual', type: 'dua', duaKey: 'wake-up' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'fajr', name: 'Fajr Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'dhuhr', name: 'Dhuhr Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'asr', name: 'Asr Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'maghrib', name: 'Maghrib Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'isha', name: 'Isha Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'quran-reading', name: 'Read Quran (10 mins)', category: 'spiritual', type: 'reading' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'exercise', name: 'Exercise/Physical Activity', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'reading', name: 'Reading/Learning', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'family-help', name: 'Help Family (Chores)', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'kind-words', name: 'Kind Words/Smile', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'sleep-dua', name: 'Sleep Dua', category: 'spiritual', type: 'dua', duaKey: 'sleep' }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>2: {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title: "Growth Level",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>description: "Building upon the foundation with Sunnah practices",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>habits: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'fajr-sunnah', name: 'Fajr Sunnah Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'morning-adhkar', name: 'Morning Adhkar', category: 'spiritual', type: 'dhikr' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'evening-adhkar', name: 'Evening Adhkar', category: 'spiritual', type: 'dhikr' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'charity', name: 'Give Charity/Sadaqah', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'help-others', name: 'Help Others', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'istighfar', name: 'Istighfar (100x)', category: 'spiritual', type: 'dhikr' }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>3: {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>title: "Excellence Level",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>description: "Advanced spiritual practices and personal development",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>habits: [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'tahajjud', name: 'Tahajjud Prayer', category: 'prayer', type: 'prayer' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'quran-memorization', name: 'Quran Memorization', category: 'spiritual', type: 'reading' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'islamic-learning', name: 'Islamic Learning/Study', category: 'spiritual', type: 'reading' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'extended-dhikr', name: 'Extended Dhikr Session', category: 'spiritual', type: 'dhikr' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'personal-goals', name: 'Work on Personal Goals', category: 'worldly', type: 'activity' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ id: 'community-service', name: 'Community Service', category: 'worldly', type: 'activity' }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const getHabitKey = (habitId) =&gt; `${selectedDate}-${habitId}`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const toggleHabit = (habitId) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const key = getHabitKey(habitId);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setCompletedHabits(prev =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>...prev,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>[key]: !prev[key]</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const isHabitCompleted = (habitId) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return completedHabits[getHabitKey(habitId)] || false;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const getCompletionPercentage = (level) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const habits = levels[level].habits;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const completed = habits.filter(habit =&gt; isHabitCompleted(habit.id)).length;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return Math.round((completed / habits.length) * 100);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const getCategoryIcon = (category) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>switch (category) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>case 'prayer': return &lt;Clock className="w-4 h-4" /&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>case 'spiritual': return &lt;Book className="w-4 h-4" /&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>case 'worldly': return &lt;Target className="w-4 h-4" /&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>default: return &lt;Circle className="w-4 h-4" /&gt;;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const openDuaModal = (duaKey) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setSelectedDua(duasContent[duaKey]);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setShowDuaModal(true);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const getStreakCount = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Simple streak calculation for demo</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return Math.floor(Math.random() * 15) + 1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Generate comprehensive progress data for AI analysis</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const generateProgressData = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const last7Days = [];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>for (let i = 6; i &gt;= 0; i--) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const date = new Date();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>date.setDate(date.getDate() - i);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const dateStr = date.toISOString().split('T')[0];</p>
+<p class="p2"><span class="Apple-converted-space">      </span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const dayHabits = levels[currentLevel].habits.map(habit =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>name: habit.name,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>category: habit.category,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>completed: completedHabits[`${dateStr}-${habit.id}`] || false</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}));</p>
+<p class="p2"><span class="Apple-converted-space">      </span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const completionRate = dayHabits.filter(h =&gt; h.completed).length / dayHabits.length;</p>
+<p class="p2"><span class="Apple-converted-space">      </span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>last7Days.push({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>date: dateStr,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dayName: date.toLocaleDateString('en-US', { weekday: 'long' }),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>habits: dayHabits,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>completionRate: Math.round(completionRate * 100)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>return {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>currentLevel,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>last7Days,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overallStreak: getStreakCount(),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>todayCompletion: getCompletionPercentage(currentLevel),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>strongestCategories: ['prayer', 'spiritual'], // Could be calculated dynamically</p>
+<p class="p1"><span class="Apple-converted-space">      </span>strugglingCategories: ['worldly'] // Could be calculated dynamically</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Get AI feedback based on progress</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const getAIFeedback = async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setLoadingFeedback(true);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const progressData = generateProgressData();</p>
+<p class="p2"><span class="Apple-converted-space">      </span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const prompt = `You are a knowledgeable Islamic mentor providing personalized guidance to a Muslim using a habit-tracking app called "Barakah Builder".<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">User's Progress Data:</p>
+<p class="p1">${JSON.stringify(progressData, null, 2)}</p>
+<p class="p2"><br></p>
+<p class="p1">Please provide personalized feedback that includes:</p>
+<p class="p1">1. Encouragement based on their current progress</p>
+<p class="p1">2. Specific Islamic advice for areas they're struggling with</p>
+<p class="p1">3. Suggestions for improvement rooted in Quran and Sunnah</p>
+<p class="p1">4. A motivational quote from Islamic sources</p>
+<p class="p1">5. Whether they should consider moving to the next level (if they're consistently achieving 80%+ completion)</p>
+<p class="p1">6. Du'a recommendation for their current spiritual state</p>
+<p class="p2"><br></p>
+<p class="p1">Respond with a JSON object in this exact format:</p>
+<p class="p1">{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"greeting": "Personalized greeting",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"progressPraise": "Specific praise for their achievements",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"strugglingAdvice": "Islamic guidance for areas of improvement",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"islamicWisdom": "Relevant verse or hadith with source",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"nextSteps": "Practical suggestions for moving forward",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"levelRecommendation": "Whether to stay current level or advance (with reasoning)",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"duaRecommendation": "Specific du'a for their situation",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"motivationalClosing": "Encouraging Islamic closing message"</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">Keep the tone warm, encouraging, and authentically Islamic. Use Islamic terminology naturally (InshaAllah, MashaAllah, Barakallahu feek, etc.).`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const response = await window.claude.complete(prompt);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const feedback = JSON.parse(response);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setAiFeedback(feedback);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setShowAIFeedback(true);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>console.error('Error getting AI feedback:', error);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Fallback feedback</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setAiFeedback({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>greeting: `Assalamu alaikum ${userName}!`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>progressPraise: "MashaAllah, you're making consistent efforts in building blessed habits!",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>strugglingAdvice: "Remember that consistency is better than intensity. Start small and build gradually.",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>islamicWisdom: "The Prophet ﷺ said: 'The most beloved deeds to Allah are those done consistently, even if they are small.' (Bukhari &amp; Muslim)",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>nextSteps: "Focus on establishing your current habits firmly before adding new ones.",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>levelRecommendation: "Continue strengthening your foundation at your current level.",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>duaRecommendation: "رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ - 'Our Lord, accept from us. Indeed, You are the Hearing, the Knowing.'",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>motivationalClosing: "May Allah make your path easy and grant you steadfastness. Barakallahu feek!"</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setShowAIFeedback(true);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setLoadingFeedback(false);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>return (</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div className="max-w-4xl mx-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* Header */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="text-center mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h1 className="text-4xl font-bold text-emerald-800 mb-2"&gt;بركة Builder&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p className="text-gray-600"&gt;Building blessed habits, one day at a time&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="mt-4 inline-flex items-center bg-white rounded-full px-4 py-2 shadow-md"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;Award className="w-5 h-5 text-amber-500 mr-2" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span className="text-sm font-medium"&gt;{getStreakCount()} day streak!&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* Date Selector */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="mb-6 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input</p>
+<p class="p1"><span class="Apple-converted-space">            </span>type="date"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>value={selectedDate}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>onChange={(e) =&gt; setSelectedDate(e.target.value)}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* AI Mentor Button */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="mb-6 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">            </span>onClick={getAIFeedback}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>disabled={loadingFeedback}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 flex items-center mx-auto space-x-2"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{loadingFeedback ? (</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;Getting guidance...&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>) : (</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;🤖&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;Get AI Islamic Guidance&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>)}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* Level Selector */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="flex justify-center space-x-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{[1, 2, 3].map(level =&gt; (</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                </span>key={level}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>onClick={() =&gt; setCurrentLevel(level)}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>className={`px-6 py-3 rounded-lg font-medium transition-all ${</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>currentLevel === level</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>? 'bg-emerald-600 text-white shadow-lg'</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>: 'bg-white text-gray-700 hover:bg-emerald-50'</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}`}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>Level {level}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>))}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* Current Level Info */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="bg-white rounded-xl shadow-lg p-6 mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="flex items-center justify-between mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;h2 className="text-2xl font-bold text-gray-800"&gt;{levels[currentLevel].title}&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;p className="text-gray-600"&gt;{levels[currentLevel].description}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="text-3xl font-bold text-emerald-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{getCompletionPercentage(currentLevel)}%</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="text-sm text-gray-500"&gt;Complete&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">          </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>{/* Progress Bar */}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="w-full bg-gray-200 rounded-full h-3 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>className="bg-gradient-to-r from-emerald-500 to-blue-500 h-3 rounded-full transition-all duration-300"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>style={{ width: `${getCompletionPercentage(currentLevel)}%` }}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>{/* Habits List */}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="space-y-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{levels[currentLevel].habits.map(habit =&gt; (</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div key={habit.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="flex items-center space-x-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; toggleHabit(habit.id)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="flex-shrink-0"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{isHabitCompleted(habit.id) ? (</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;CheckCircle className="w-6 h-6 text-emerald-600" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>) : (</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;Circle className="w-6 h-6 text-gray-400" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>)}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="flex items-center space-x-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{getCategoryIcon(habit.category)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span className={`font-medium ${isHabitCompleted(habit.id) ? 'text-emerald-700 line-through' : 'text-gray-800'}`}&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>{habit.name}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{habit.type === 'dua' &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; openDuaModal(habit.duaKey)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="text-emerald-600 hover:text-emerald-800 text-sm font-medium"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Learn</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>)}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>))}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* Community Preview */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="bg-white rounded-xl shadow-lg p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="flex items-center justify-between mb-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3 className="text-xl font-bold text-gray-800 flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;Users className="w-5 h-5 mr-2" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>Community (Coming Soon)</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="text-center py-8 text-gray-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Connect with family and friends&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Share achievements and make dua for each other&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Friendly competitions and leaderboards&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* AI Feedback Modal */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{showAIFeedback &amp;&amp; aiFeedback &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="flex justify-between items-center mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;h3 className="text-2xl font-bold text-purple-800 flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span className="text-2xl mr-3"&gt;🌟&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Your Islamic Mentor</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; setShowAIFeedback(false)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="text-gray-500 hover:text-gray-700 text-xl"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>✕</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="space-y-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Greeting */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-emerald-800 mb-2"&gt;✨ Greeting&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800"&gt;{aiFeedback.greeting}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Progress Praise */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-green-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-green-800 mb-2"&gt;🎉 MashaAllah - Your Progress&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800"&gt;{aiFeedback.progressPraise}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Struggling Areas Advice */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-amber-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-amber-800 mb-2"&gt;💡 Areas for Growth&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800"&gt;{aiFeedback.strugglingAdvice}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Islamic Wisdom */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-purple-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-purple-800 mb-2"&gt;📖 Islamic Wisdom&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800 italic"&gt;{aiFeedback.islamicWisdom}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Next Steps */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-blue-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-blue-800 mb-2"&gt;🎯 Next Steps&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800"&gt;{aiFeedback.nextSteps}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Level Recommendation */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-indigo-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-indigo-800 mb-2"&gt;📈 Level Guidance&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800"&gt;{aiFeedback.levelRecommendation}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Dua Recommendation */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-rose-50 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-rose-800 mb-2"&gt;🤲 Recommended Du'a&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800 text-right text-lg mb-2"&gt;{aiFeedback.duaRecommendation}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>{/* Motivational Closing */}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="bg-gradient-to-r from-emerald-100 to-blue-100 p-4 rounded-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-emerald-800 mb-2"&gt;🌟 Final Encouragement&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800 font-medium"&gt;{aiFeedback.motivationalClosing}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="mt-8 text-center space-x-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; setShowAIFeedback(false)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>JazakAllahu Khairan</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>setShowAIFeedback(false);</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>getAIFeedback();</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Get New Guidance</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>)}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>{/* Dua Modal */}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{showDuaModal &amp;&amp; selectedDua &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="p-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="flex justify-between items-center mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;h3 className="text-xl font-bold text-gray-800"&gt;{selectedDua.title}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; setShowDuaModal(false)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="text-gray-500 hover:text-gray-700"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>✕</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="space-y-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-gray-700 mb-2"&gt;Arabic&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-2xl text-right leading-relaxed font-arabic"&gt;{selectedDua.arabic}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-gray-700 mb-2"&gt;Transliteration&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-lg italic text-gray-600"&gt;{selectedDua.transliteration}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                  </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h4 className="font-semibold text-gray-700 mb-2"&gt;Translation&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p className="text-gray-800"&gt;{selectedDua.translation}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="mt-6 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; setShowDuaModal(false)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Close</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>)}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>);</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">export default BarakahBuilder;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
