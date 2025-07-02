@@ -12,487 +12,230 @@
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    // Paste the React component code here
-import React, { useState, useEffect } from 'react';
-import { CheckCircle, Circle, Book, Users, Target, Award, Sun, Moon, Clock } from 'lucide-react';
+    // All code here, NO imports/exports!
 
-const BarakahBuilder = () => {
-  const [currentLevel, setCurrentLevel] = useState(1);
-  const [completedHabits, setCompletedHabits] = useState({});
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [showDuaModal, setShowDuaModal] = useState(false);
-  const [selectedDua, setSelectedDua] = useState(null);
-  const [showAIFeedback, setShowAIFeedback] = useState(false);
-  const [aiFeedback, setAiFeedback] = useState(null);
-  const [loadingFeedback, setLoadingFeedback] = useState(false);
-  const [userName, setUserName] = useState('Brother/Sister');
+    function BarakahBuilder() {
+      // State and logic
+      const [currentLevel, setCurrentLevel] = React.useState(1);
+      const [completedHabits, setCompletedHabits] = React.useState({});
+      const [selectedDate, setSelectedDate] = React.useState(new Date().toISOString().split('T')[0]);
+      const [showDuaModal, setShowDuaModal] = React.useState(false);
+      const [selectedDua, setSelectedDua] = React.useState(null);
 
-  // Sample duas and content
-  const duasContent = {
-    'wake-up': {
-      title: 'Dua upon Waking Up',
-      arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
-      transliteration: 'Alhamdu lillaahil-lathee ahyaana ba\'da maa amaatanaa wa ilayhin-nushoor',
-      translation: 'All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection.'
-    },
-    'sleep': {
-      title: 'Dua before Sleeping',
-      arabic: 'بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ',
-      transliteration: 'Bismika rabbee wada\'tu janbee wa bika arfa\'uhu fa-in amsakta nafsee farhamhaa wa in arsaltahaa fahfazhaa bimaa tahfazu bihi \'ibaadakas-saaliheen',
-      translation: 'In Your name my Lord, I lie down and in Your name I rise, so if You should take my soul then have mercy upon it, and if You should return my soul then protect it in the manner You do so with Your righteous servants.'
-    }
-  };
+      // Minimal dua content demo
+      const duasContent = {
+        'wake-up': {
+          title: 'Dua upon Waking Up',
+          arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
+          transliteration: "Alhamdu lillaahil-lathee ahyaana ba'da maa amaatanaa wa ilayhin-nushoor",
+          translation: "All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection."
+        },
+        'sleep': {
+          title: 'Dua before Sleeping',
+          arabic: 'بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ ...',
+          transliteration: "Bismika rabbee wada'tu janbee wa bika arfa'uhu ...",
+          translation: "In Your name my Lord, I lie down and in Your name I rise..."
+        }
+      };
 
-  // Level definitions
-  const levels = {
-    1: {
-      title: "Foundation Level",
-      description: "Essential Islamic practices and worldly responsibilities",
-      habits: [
-        { id: 'wake-dua', name: 'Morning Dua (Upon Waking)', category: 'spiritual', type: 'dua', duaKey: 'wake-up' },
-        { id: 'fajr', name: 'Fajr Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'dhuhr', name: 'Dhuhr Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'asr', name: 'Asr Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'maghrib', name: 'Maghrib Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'isha', name: 'Isha Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'quran-reading', name: 'Read Quran (10 mins)', category: 'spiritual', type: 'reading' },
-        { id: 'exercise', name: 'Exercise/Physical Activity', category: 'worldly', type: 'activity' },
-        { id: 'reading', name: 'Reading/Learning', category: 'worldly', type: 'activity' },
-        { id: 'family-help', name: 'Help Family (Chores)', category: 'worldly', type: 'activity' },
-        { id: 'kind-words', name: 'Kind Words/Smile', category: 'worldly', type: 'activity' },
-        { id: 'sleep-dua', name: 'Sleep Dua', category: 'spiritual', type: 'dua', duaKey: 'sleep' }
-      ]
-    },
-    2: {
-      title: "Growth Level",
-      description: "Building upon the foundation with Sunnah practices",
-      habits: [
-        { id: 'fajr-sunnah', name: 'Fajr Sunnah Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'morning-adhkar', name: 'Morning Adhkar', category: 'spiritual', type: 'dhikr' },
-        { id: 'evening-adhkar', name: 'Evening Adhkar', category: 'spiritual', type: 'dhikr' },
-        { id: 'charity', name: 'Give Charity/Sadaqah', category: 'worldly', type: 'activity' },
-        { id: 'help-others', name: 'Help Others', category: 'worldly', type: 'activity' },
-        { id: 'istighfar', name: 'Istighfar (100x)', category: 'spiritual', type: 'dhikr' }
-      ]
-    },
-    3: {
-      title: "Excellence Level",
-      description: "Advanced spiritual practices and personal development",
-      habits: [
-        { id: 'tahajjud', name: 'Tahajjud Prayer', category: 'prayer', type: 'prayer' },
-        { id: 'quran-memorization', name: 'Quran Memorization', category: 'spiritual', type: 'reading' },
-        { id: 'islamic-learning', name: 'Islamic Learning/Study', category: 'spiritual', type: 'reading' },
-        { id: 'extended-dhikr', name: 'Extended Dhikr Session', category: 'spiritual', type: 'dhikr' },
-        { id: 'personal-goals', name: 'Work on Personal Goals', category: 'worldly', type: 'activity' },
-        { id: 'community-service', name: 'Community Service', category: 'worldly', type: 'activity' }
-      ]
-    }
-  };
+      // Level and habit definitions (trimmed for brevity)
+      const levels = {
+        1: {
+          title: "Foundation Level",
+          description: "Essential Islamic practices and worldly responsibilities",
+          habits: [
+            { id: 'wake-dua', name: 'Morning Dua (Upon Waking)', category: 'spiritual', type: 'dua', duaKey: 'wake-up' },
+            { id: 'fajr', name: 'Fajr Prayer', category: 'prayer', type: 'prayer' },
+            { id: 'quran-reading', name: 'Read Quran (10 mins)', category: 'spiritual', type: 'reading' },
+            { id: 'exercise', name: 'Exercise/Physical Activity', category: 'worldly', type: 'activity' },
+            { id: 'sleep-dua', name: 'Sleep Dua', category: 'spiritual', type: 'dua', duaKey: 'sleep' }
+          ]
+        },
+        2: {
+          title: "Growth Level",
+          description: "Building upon the foundation with Sunnah practices",
+          habits: [
+            { id: 'fajr-sunnah', name: 'Fajr Sunnah Prayer', category: 'prayer', type: 'prayer' },
+            { id: 'morning-adhkar', name: 'Morning Adhkar', category: 'spiritual', type: 'dhikr' }
+          ]
+        },
+        3: {
+          title: "Excellence Level",
+          description: "Advanced spiritual practices and personal development",
+          habits: [
+            { id: 'tahajjud', name: 'Tahajjud Prayer', category: 'prayer', type: 'prayer' },
+            { id: 'quran-memorization', name: 'Quran Memorization', category: 'spiritual', type: 'reading' }
+          ]
+        }
+      };
 
-  const getHabitKey = (habitId) => `${selectedDate}-${habitId}`;
+      function getHabitKey(habitId) {
+        return `${selectedDate}-${habitId}`;
+      }
+      function toggleHabit(habitId) {
+        const key = getHabitKey(habitId);
+        setCompletedHabits(prev => ({
+          ...prev,
+          [key]: !prev[key]
+        }));
+      }
+      function isHabitCompleted(habitId) {
+        return completedHabits[getHabitKey(habitId)] || false;
+      }
+      function getCompletionPercentage(level) {
+        const habits = levels[level].habits;
+        const completed = habits.filter(habit => isHabitCompleted(habit.id)).length;
+        return Math.round((completed / habits.length) * 100);
+      }
+      function getCategoryIcon(category) {
+        if (category === 'prayer') return <span>🕌</span>;
+        if (category === 'spiritual') return <span>📖</span>;
+        if (category === 'worldly') return <span>🎯</span>;
+        return <span>⭕</span>;
+      }
+      function openDuaModal(duaKey) {
+        setSelectedDua(duasContent[duaKey]);
+        setShowDuaModal(true);
+      }
 
-  const toggleHabit = (habitId) => {
-    const key = getHabitKey(habitId);
-    setCompletedHabits(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
+      // Demo streak
+      function getStreakCount() {
+        return 3;
+      }
 
-  const isHabitCompleted = (habitId) => {
-    return completedHabits[getHabitKey(habitId)] || false;
-  };
-
-  const getCompletionPercentage = (level) => {
-    const habits = levels[level].habits;
-    const completed = habits.filter(habit => isHabitCompleted(habit.id)).length;
-    return Math.round((completed / habits.length) * 100);
-  };
-
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case 'prayer': return <Clock className="w-4 h-4" />;
-      case 'spiritual': return <Book className="w-4 h-4" />;
-      case 'worldly': return <Target className="w-4 h-4" />;
-      default: return <Circle className="w-4 h-4" />;
-    }
-  };
-
-  const openDuaModal = (duaKey) => {
-    setSelectedDua(duasContent[duaKey]);
-    setShowDuaModal(true);
-  };
-
-  const getStreakCount = () => {
-    // Simple streak calculation for demo
-    return Math.floor(Math.random() * 15) + 1;
-  };
-
-  // Generate comprehensive progress data for AI analysis
-  const generateProgressData = () => {
-    const last7Days = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      
-      const dayHabits = levels[currentLevel].habits.map(habit => ({
-        name: habit.name,
-        category: habit.category,
-        completed: completedHabits[`${dateStr}-${habit.id}`] || false
-      }));
-      
-      const completionRate = dayHabits.filter(h => h.completed).length / dayHabits.length;
-      
-      last7Days.push({
-        date: dateStr,
-        dayName: date.toLocaleDateString('en-US', { weekday: 'long' }),
-        habits: dayHabits,
-        completionRate: Math.round(completionRate * 100)
-      });
-    }
-    
-    return {
-      currentLevel,
-      last7Days,
-      overallStreak: getStreakCount(),
-      todayCompletion: getCompletionPercentage(currentLevel),
-      strongestCategories: ['prayer', 'spiritual'], // Could be calculated dynamically
-      strugglingCategories: ['worldly'] // Could be calculated dynamically
-    };
-  };
-
-  // Get AI feedback based on progress
-  const getAIFeedback = async () => {
-    setLoadingFeedback(true);
-    try {
-      const progressData = generateProgressData();
-      
-      const prompt = `You are a knowledgeable Islamic mentor providing personalized guidance to a Muslim using a habit-tracking app called "Barakah Builder". 
-
-User's Progress Data:
-${JSON.stringify(progressData, null, 2)}
-
-Please provide personalized feedback that includes:
-1. Encouragement based on their current progress
-2. Specific Islamic advice for areas they're struggling with
-3. Suggestions for improvement rooted in Quran and Sunnah
-4. A motivational quote from Islamic sources
-5. Whether they should consider moving to the next level (if they're consistently achieving 80%+ completion)
-6. Du'a recommendation for their current spiritual state
-
-Respond with a JSON object in this exact format:
-{
-  "greeting": "Personalized greeting",
-  "progressPraise": "Specific praise for their achievements",
-  "strugglingAdvice": "Islamic guidance for areas of improvement",
-  "islamicWisdom": "Relevant verse or hadith with source",
-  "nextSteps": "Practical suggestions for moving forward",
-  "levelRecommendation": "Whether to stay current level or advance (with reasoning)",
-  "duaRecommendation": "Specific du'a for their situation",
-  "motivationalClosing": "Encouraging Islamic closing message"
-}
-
-Keep the tone warm, encouraging, and authentically Islamic. Use Islamic terminology naturally (InshaAllah, MashaAllah, Barakallahu feek, etc.).`;
-
-      const response = await window.claude.complete(prompt);
-      const feedback = JSON.parse(response);
-      setAiFeedback(feedback);
-      setShowAIFeedback(true);
-    } catch (error) {
-      console.error('Error getting AI feedback:', error);
-      // Fallback feedback
-      setAiFeedback({
-        greeting: `Assalamu alaikum ${userName}!`,
-        progressPraise: "MashaAllah, you're making consistent efforts in building blessed habits!",
-        strugglingAdvice: "Remember that consistency is better than intensity. Start small and build gradually.",
-        islamicWisdom: "The Prophet ﷺ said: 'The most beloved deeds to Allah are those done consistently, even if they are small.' (Bukhari & Muslim)",
-        nextSteps: "Focus on establishing your current habits firmly before adding new ones.",
-        levelRecommendation: "Continue strengthening your foundation at your current level.",
-        duaRecommendation: "رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ - 'Our Lord, accept from us. Indeed, You are the Hearing, the Knowing.'",
-        motivationalClosing: "May Allah make your path easy and grant you steadfastness. Barakallahu feek!"
-      });
-      setShowAIFeedback(true);
-    }
-    setLoadingFeedback(false);
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-800 mb-2">بركة Builder</h1>
-          <p className="text-gray-600">Building blessed habits, one day at a time</p>
-          <div className="mt-4 inline-flex items-center bg-white rounded-full px-4 py-2 shadow-md">
-            <Award className="w-5 h-5 text-amber-500 mr-2" />
-            <span className="text-sm font-medium">{getStreakCount()} day streak!</span>
-          </div>
-        </div>
-
-        {/* Date Selector */}
-        <div className="mb-6 text-center">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-          />
-        </div>
-
-        {/* AI Mentor Button */}
-        <div className="mb-6 text-center">
-          <button
-            onClick={getAIFeedback}
-            disabled={loadingFeedback}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 flex items-center mx-auto space-x-2"
-          >
-            {loadingFeedback ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Getting guidance...</span>
-              </>
-            ) : (
-              <>
-                <span>🤖</span>
-                <span>Get AI Islamic Guidance</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* Level Selector */}
-        <div className="mb-8">
-          <div className="flex justify-center space-x-4">
-            {[1, 2, 3].map(level => (
-              <button
-                key={level}
-                onClick={() => setCurrentLevel(level)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all ${
-                  currentLevel === level
-                    ? 'bg-emerald-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-emerald-50'
-                }`}
-              >
-                Level {level}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Current Level Info */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800">{levels[currentLevel].title}</h2>
-              <p className="text-gray-600">{levels[currentLevel].description}</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">
-                {getCompletionPercentage(currentLevel)}%
+      // UI
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
+          <div className="max-w-2xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-emerald-800 mb-2">بركة Builder</h1>
+              <p className="text-gray-600">Building blessed habits, one day at a time</p>
+              <div className="mt-4 inline-flex items-center bg-white rounded-full px-4 py-2 shadow-md">
+                <span className="mr-2">🏆</span>
+                <span className="text-sm font-medium">{getStreakCount()} day streak!</span>
               </div>
-              <div className="text-sm text-gray-500">Complete</div>
             </div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
-            <div 
-              className="bg-gradient-to-r from-emerald-500 to-blue-500 h-3 rounded-full transition-all duration-300"
-              style={{ width: `${getCompletionPercentage(currentLevel)}%` }}
-            ></div>
-          </div>
-
-          {/* Habits List */}
-          <div className="space-y-3">
-            {levels[currentLevel].habits.map(habit => (
-              <div key={habit.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <div className="flex items-center space-x-3">
+            {/* Date Selector */}
+            <div className="mb-6 text-center">
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={e => setSelectedDate(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              />
+            </div>
+            {/* Level Selector */}
+            <div className="mb-8">
+              <div className="flex justify-center space-x-4">
+                {[1,2,3].map(level => (
                   <button
-                    onClick={() => toggleHabit(habit.id)}
-                    className="flex-shrink-0"
-                  >
-                    {isHabitCompleted(habit.id) ? (
-                      <CheckCircle className="w-6 h-6 text-emerald-600" />
-                    ) : (
-                      <Circle className="w-6 h-6 text-gray-400" />
+                    key={level}
+                    onClick={() => setCurrentLevel(level)}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      currentLevel === level
+                        ? 'bg-emerald-600 text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-emerald-50'
+                    }`}
+                  >Level {level}</button>
+                ))}
+              </div>
+            </div>
+            {/* Level Info & Habits */}
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">{levels[currentLevel].title}</h2>
+                  <p className="text-gray-600">{levels[currentLevel].description}</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-emerald-600">
+                    {getCompletionPercentage(currentLevel)}%
+                  </div>
+                  <div className="text-sm text-gray-500">Complete</div>
+                </div>
+              </div>
+              {/* Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
+                <div
+                  className="bg-gradient-to-r from-emerald-500 to-blue-500 h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${getCompletionPercentage(currentLevel)}%` }}
+                ></div>
+              </div>
+              {/* Habits List */}
+              <div className="space-y-3">
+                {levels[currentLevel].habits.map(habit => (
+                  <div key={habit.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className="flex items-center space-x-3">
+                      <button
+                        onClick={() => toggleHabit(habit.id)}
+                        className="flex-shrink-0"
+                        aria-label={isHabitCompleted(habit.id) ? "Done" : "Mark as done"}
+                      >
+                        {isHabitCompleted(habit.id)
+                          ? <span className="text-emerald-600 text-xl">✔️</span>
+                          : <span className="text-gray-400 text-xl">⭕</span>
+                        }
+                      </button>
+                      <div className="flex items-center space-x-2">
+                        {getCategoryIcon(habit.category)}
+                        <span className={`font-medium ${isHabitCompleted(habit.id) ? 'text-emerald-700 line-through' : 'text-gray-800'}`}>{habit.name}</span>
+                      </div>
+                    </div>
+                    {habit.type === 'dua' && (
+                      <button
+                        onClick={() => openDuaModal(habit.duaKey)}
+                        className="text-emerald-600 hover:text-emerald-800 text-sm font-medium"
+                      >Learn</button>
                     )}
-                  </button>
-                  <div className="flex items-center space-x-2">
-                    {getCategoryIcon(habit.category)}
-                    <span className={`font-medium ${isHabitCompleted(habit.id) ? 'text-emerald-700 line-through' : 'text-gray-800'}`}>
-                      {habit.name}
-                    </span>
                   </div>
-                </div>
-                {habit.type === 'dua' && (
-                  <button
-                    onClick={() => openDuaModal(habit.duaKey)}
-                    className="text-emerald-600 hover:text-emerald-800 text-sm font-medium"
-                  >
-                    Learn
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Community Preview */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-800 flex items-center">
-              <Users className="w-5 h-5 mr-2" />
-              Community (Coming Soon)
-            </h3>
-          </div>
-          <div className="text-center py-8 text-gray-500">
-            <p>Connect with family and friends</p>
-            <p>Share achievements and make dua for each other</p>
-            <p>Friendly competitions and leaderboards</p>
-          </div>
-        </div>
-
-        {/* AI Feedback Modal */}
-        {showAIFeedback && aiFeedback && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-bold text-purple-800 flex items-center">
-                    <span className="text-2xl mr-3">🌟</span>
-                    Your Islamic Mentor
-                  </h3>
-                  <button
-                    onClick={() => setShowAIFeedback(false)}
-                    className="text-gray-500 hover:text-gray-700 text-xl"
-                  >
-                    ✕
-                  </button>
-                </div>
-                
-                <div className="space-y-6">
-                  {/* Greeting */}
-                  <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-emerald-800 mb-2">✨ Greeting</h4>
-                    <p className="text-gray-800">{aiFeedback.greeting}</p>
-                  </div>
-                  
-                  {/* Progress Praise */}
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-green-800 mb-2">🎉 MashaAllah - Your Progress</h4>
-                    <p className="text-gray-800">{aiFeedback.progressPraise}</p>
-                  </div>
-                  
-                  {/* Struggling Areas Advice */}
-                  <div className="bg-amber-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-amber-800 mb-2">💡 Areas for Growth</h4>
-                    <p className="text-gray-800">{aiFeedback.strugglingAdvice}</p>
-                  </div>
-                  
-                  {/* Islamic Wisdom */}
-                  <div className="bg-purple-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-purple-800 mb-2">📖 Islamic Wisdom</h4>
-                    <p className="text-gray-800 italic">{aiFeedback.islamicWisdom}</p>
-                  </div>
-                  
-                  {/* Next Steps */}
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-blue-800 mb-2">🎯 Next Steps</h4>
-                    <p className="text-gray-800">{aiFeedback.nextSteps}</p>
-                  </div>
-                  
-                  {/* Level Recommendation */}
-                  <div className="bg-indigo-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-indigo-800 mb-2">📈 Level Guidance</h4>
-                    <p className="text-gray-800">{aiFeedback.levelRecommendation}</p>
-                  </div>
-                  
-                  {/* Dua Recommendation */}
-                  <div className="bg-rose-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-rose-800 mb-2">🤲 Recommended Du'a</h4>
-                    <p className="text-gray-800 text-right text-lg mb-2">{aiFeedback.duaRecommendation}</p>
-                  </div>
-                  
-                  {/* Motivational Closing */}
-                  <div className="bg-gradient-to-r from-emerald-100 to-blue-100 p-4 rounded-lg">
-                    <h4 className="font-semibold text-emerald-800 mb-2">🌟 Final Encouragement</h4>
-                    <p className="text-gray-800 font-medium">{aiFeedback.motivationalClosing}</p>
-                  </div>
-                </div>
-                
-                <div className="mt-8 text-center space-x-4">
-                  <button
-                    onClick={() => setShowAIFeedback(false)}
-                    className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
-                  >
-                    JazakAllahu Khairan
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowAIFeedback(false);
-                      getAIFeedback();
-                    }}
-                    className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-                  >
-                    Get New Guidance
-                  </button>
-                </div>
+                ))}
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Dua Modal */}
-        {showDuaModal && selectedDua && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-800">{selectedDua.title}</h3>
-                  <button
-                    onClick={() => setShowDuaModal(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    ✕
-                  </button>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="text-center">
-                    <h4 className="font-semibold text-gray-700 mb-2">Arabic</h4>
-                    <p className="text-2xl text-right leading-relaxed font-arabic">{selectedDua.arabic}</p>
+            {/* Dua Modal */}
+            {showDuaModal && selectedDua && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                  <div className="p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-bold text-gray-800">{selectedDua.title}</h3>
+                      <button
+                        onClick={() => setShowDuaModal(false)}
+                        className="text-gray-500 hover:text-gray-700"
+                      >✕</button>
+                    </div>
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <h4 className="font-semibold text-gray-700 mb-2">Arabic</h4>
+                        <p className="text-2xl text-right leading-relaxed font-arabic">{selectedDua.arabic}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-700 mb-2">Transliteration</h4>
+                        <p className="text-lg italic text-gray-600">{selectedDua.transliteration}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-700 mb-2">Translation</h4>
+                        <p className="text-gray-800">{selectedDua.translation}</p>
+                      </div>
+                    </div>
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={() => setShowDuaModal(false)}
+                        className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                      >Close</button>
+                    </div>
                   </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">Transliteration</h4>
-                    <p className="text-lg italic text-gray-600">{selectedDua.transliteration}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">Translation</h4>
-                    <p className="text-gray-800">{selectedDua.translation}</p>
-                  </div>
-                </div>
-                
-                <div className="mt-6 text-center">
-                  <button
-                    onClick={() => setShowDuaModal(false)}
-                    className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
-                  >
-                    Close
-                  </button>
                 </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
-    </div>
-  );
-};
+        </div>
+      );
+    }
 
-export default BarakahBuilder;
+    // Render to DOM
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<BarakahBuilder />);
   </script>
 </body>
 </html>
